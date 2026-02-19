@@ -16,6 +16,8 @@ namespace Calc
     /// </summary>
     public partial class MainWindow : Window
     {
+        private double _c = 0.0;
+        private int _d = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -28,16 +30,31 @@ namespace Calc
 
         private void Digit_Click(object sender, RoutedEventArgs e)
         {
+            
             if (sender is Button btn)
             {
+
                 string tag;
                 switch (btn.Tag)
                 {
-                    case "pm": tag = "Знак ±"; break;
-                    case ".": tag = "Знак \",\""; break;
-                    default: tag = $"Цифра {btn.Tag}"; break;
+                    case "pm": _c = -_c; break;
+                    case ".": _d = 1 ; break;
+                    default:
+                        {
+                            var digit = Double.Parse(btn.Tag.ToString());
+                            if (_d == 0)
+                            {
+                                _c = (Math.Sign(_c) == 0 ? 1 : Math.Sign(_c)) * (Math.Abs(_c) * 10 + digit);
+                            } else
+                            {
+                                _d *= 10;
+                                _c = (Math.Sign(_c) ==0 ? 1 : Math.Sign(_c)) * (Math.Abs(_c) + digit/_d);
+                            }
+                                break;
+                        }
                 }
-                MessageBox.Show(tag, "Действие:", MessageBoxButton.OK, MessageBoxImage.Information);
+                Display.Text = _c.ToString();
+                //MessageBox.Show(tag, "Действие:", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }
