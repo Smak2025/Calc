@@ -21,6 +21,9 @@ namespace Calc
         public MainWindow()
         {
             InitializeComponent();
+            List<string> themes = new List<string>() { "GreenBlueTheme", "OtherTheme" };
+            ThemeSelector.ItemsSource = themes;
+            ThemeSelector.SelectedIndex = 0;
         }
 
         private void Clear_Click(object sender, RoutedEventArgs e)
@@ -29,8 +32,7 @@ namespace Calc
         }
 
         private void Digit_Click(object sender, RoutedEventArgs e)
-        {
-            
+        {  
             if (sender is Button btn)
             {
 
@@ -50,12 +52,20 @@ namespace Calc
                                 _d *= 10;
                                 _c = (Math.Sign(_c) ==0 ? 1 : Math.Sign(_c)) * (Math.Abs(_c) + digit/_d);
                             }
-                                break;
+                            break;
                         }
                 }
                 Display.Text = _c.ToString();
-                //MessageBox.Show(tag, "Действие:", MessageBoxButton.OK, MessageBoxImage.Information);
             }
+        }
+
+        private void ThemeSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var style = ThemeSelector.SelectedItem as string;
+            var uri = new Uri(style + ".xaml", UriKind.Relative);
+            ResourceDictionary resourceDictionary = Application.LoadComponent(uri) as ResourceDictionary;
+            Application.Current.Resources.Clear();
+            Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
         }
     }
 }
